@@ -17,7 +17,7 @@ class Master {
     if (hostname.match(/localhost/)){
       window.appName = '';
       window.appRootPath = '/';
-      window.apiSrc = 'https://portal.taksys.com.sg/MDASStg/';
+      window.apiSrc = 'https://mosaic.mdas.org.sg/MDASStg/';
     }
     else {
       if (href.length >= 3) {
