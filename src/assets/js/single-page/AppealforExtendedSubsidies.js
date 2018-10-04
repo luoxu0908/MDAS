@@ -1,10 +1,11 @@
 $(document).foundation();
+var CurrentID=0;
 $(function() {
   //get cookie & loginID
   var appCookie = Cookies.getJSON('appCookie'),
     loginID = appCookie.loginID;
   $('#submit').click(function() {
-    SaveDeclaretion();
+    SaveAppealforExtendedSubsidies();
   });
 
   $('.calcNumber').each(function(index,item){
@@ -52,7 +53,7 @@ function GetAppealforExtendedSubsidies(ID) {
               if ((data) && (data.d.RetVal === -1)) {
                   if (data.d.RetData.Tbl.Rows.length > 0) {
                       var AppealforExtended = data.d.RetData.Tbl.Rows[0];
-
+                      CurrentID=AppealforExtended.ID||0;
                       $('#step1_Name').val(AppealforExtended.Step1_Name || '')
                       $('#step1_MDName').val(AppealforExtended.Step1_MDName|| '')
                       $('#step1_NRIC').val(AppealforExtended.Step1_NRIC || '')
@@ -338,11 +339,12 @@ function CalcTotal(elment,index){
 }
 
 //Submit data
-function SaveDeclaretion() {
+function SaveAppealforExtendedSubsidies() {
   if (!formSectionValidate($('#pageContentWrapper'),1)) {
     return false;
   }
   var data = {};
+  data['ID'] = CurrentID;
   $('#pageContentWrapper :input,select').each(function() {
     var type = $(this).attr('type'),
       name = $(this).attr('name'),

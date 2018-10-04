@@ -24,28 +24,9 @@
   #mainTable td{
     padding: 0.6rem 0.5rem 0 0;
   }
+  .spanCss{color:red;}
   </style>
 <br>
-  <div class="grid-x">
-      <div class="cell small-4 grid-padding-x middle"><h5>Scheme/Grant Type:</h5>      </div>
-      <div class="cell small-6 grid-padding-x">
-        <input type="text">
-      </div>
-  </div>
-    <h3 onclick="window.print();">Important information:</h3>
-    <p>1. I am aware that all the information furnished by me in this form is true and correct.</p>
-    <p>2. The processing time for your appeal will take approximately 14 working days upon the receipt of the appeal form AND supporting documents.</p>
-    <p>3. The outcome of the appeal will be sent to the mailing address as stated on this form and the MDAS’ decision is final.</p>
-    <p>4. You may contact MDAS at Tel. 62596933 to check on the status of your appeal.</p>
-    <div>Please mail /email the completed form AND supporting documents to:</div>
-    <div class="grid-x">
-        <div class="cell small-8 grid-padding-x">
-            <strong>Mail to:</strong><br> Social Service Department Muscular Dystrophy Association (Singapore) 9 Bishan Place #06-04 Junction 8 Singapore 579837
-        </div>
-        <div class="cell small-3 small-offset-1 grid-padding-x">
-            <strong>Scan and email to:</strong> <br> i-care@mdas.org.s
-        </div>
-    </div>
     <ul class="breadcrumbs" id="breadcrumbs"></ul>
     <fieldset id="step1">
         <h2>Step 1</h2>
@@ -106,24 +87,24 @@
             individuals as per the provisions of the Act.
         </label>
 
-        <div class="labelText">DECLARATION BY APPLICANT</div>
-        Consent/Declaration must be signed by the Appellant (Ordinary Member).
+        <div class="labelText">DECLARATION BY APPLICANT <span class="spanCss">*</span></label></div>
+       <h5>Consent/Declaration must be signed by the Appellant (Ordinary Member).</h5> 
         <label>
-            <input type="checkbox" name="step3_DECLARATION2" id="step3_CheckBox2" value="step3_CheckBox2">
+            <input type="checkbox" name="step3_DECLARATION2" id="step3_CheckBox2" value="step3_CheckBox2" required>
             I hereby declare that all the information provided in this form is true, correct and accurate to the best of my knowledge.
         </label>
         <label>
-            <input type="checkbox" name="step3_DECLARATION2" id="step3_CheckBox3" value="step3_CheckBox3">
+            <input type="checkbox" name="step3_DECLARATION2" id="step3_CheckBox3" value="step3_CheckBox3" required>
             I also understand that all information provided for the purpose of means testing evaluation will be kept confidential.
         </label>
         <label>
-            <input type="checkbox" name="step3_DECLARATION2" id="step3_CheckBox4" value="step3_CheckBox4">
+            <input type="checkbox" name="step3_DECLARATION2" id="step3_CheckBox4" value="step3_CheckBox4" required>
             I understand and acknowledge that if any of the information provided in this form is false or inaccurate, I will be liable to
             repay in full any subsidy and financial assistance granted inclusive of all administrative expenses, and/or denied future
             financial assistance for a stipulated period of time set by the Association.
         </label>
         <label>
-            <input type="checkbox" name="step3_DECLARATION2" id="step3_CheckBox5" value="step3_CheckBox5">
+            <input type="checkbox" name="step3_DECLARATION2" id="step3_CheckBox5" value="step3_CheckBox5" required>
             I hereby confirm that I understand and agree to all the provisions in this form*.
         </label>
         <div class="grid-x">
