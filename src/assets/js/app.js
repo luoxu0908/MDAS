@@ -79,21 +79,24 @@ $(function(){
     return false;
   });
 
-  if (!appCookie.username && pageName.toLowerCase() != 'login') {
-    var pageURL = window.location.href;
-    if (typeof Cookies.getJSON('appCookie') !== 'undefined') {
-      appCookie = Cookies.getJSON('appCookie');
-    }
-    appCookie.redirectPage = (pageURL != '') ? pageURL : appRootPath+'index.html';
-    Cookies.set('appCookie', appCookie);
-    window.location.href = appRootPath +'login.html';
-  }
 
-  if(appCookie.loginID){
-    GetBasicInformation(appCookie.personID);
-  }
+  //if (pageName.toLowerCase() != 'login' && (!appCookie.loginID)) {
+    
+  //  var pageURL = window.location.href;
+  //  if (typeof Cookies.getJSON('appCookie') !== 'undefined') {
+  //    appCookie = Cookies.getJSON('appCookie');
+  //  }
+  //  appCookie.redirectPage = (pageURL != '') ? pageURL : appRootPath+'index.html';
+  //  Cookies.set('appCookie', appCookie);
+  //  window.location.href = appRootPath +'login.html';
+  //}
 
-  $('#mainMenuLeft #logOut, #logOut').click(function() {
+  //if(appCookie.loginID){
+  //  GetBasicInformation(appCookie.personID);
+  //}
+
+  $('#mainMenuLeft #logOut, #navLogout').click(function() {
+      alert();
     $.ajax({
       url: apiSrc+"Sec1.Logout.json",
       method: "POST",
@@ -253,7 +256,7 @@ $(function(){
 
 
 function pageInit() {
-  loadMenu();
+  //loadMenu();
   loadPage('currentPage','');
 
   //search
