@@ -17,6 +17,11 @@ $(function(){
         GetAccessibleTransitMobilityAssistance(ID)
       }
     });
+    $('[name=sectionC_PurposeTransport]').change(function(){
+      if ($(this).prop('checked')) {
+        
+      }
+    })
 });
 
 //geneare drop down optioms
