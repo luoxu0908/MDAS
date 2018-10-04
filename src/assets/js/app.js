@@ -96,7 +96,6 @@ $(function(){
   //}
 
   $('#mainMenuLeft #logOut, #navLogout').click(function() {
-      alert();
     $.ajax({
       url: apiSrc+"Sec1.Logout.json",
       method: "POST",
