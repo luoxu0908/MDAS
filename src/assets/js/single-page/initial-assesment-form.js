@@ -1,12 +1,12 @@
   Foundation.Abide.defaults.patterns['NRIC'] = /^[A-Z]{1}[0-9]{7}[A-Z]{1}$/;
   Foundation.Abide.defaults.patterns['Mobile'] = /^\+{0,1}\d{8,}$/;
   $(document).foundation();
+  var CurrentID=0;
     var SectionCObj = {};
   $(function () {
       //get cookie & loginID
       var appCookie = Cookies.getJSON('appCookie'),
           loginID = appCookie.loginID;
-
       $('.scoreRow :input[type="checkbox"]').click(function () {
           if ($(this).is(':checked')) {
 
@@ -149,6 +149,10 @@ function GetMemberShip(GroupID){
                        $('#sectionA_DisplayName').val(ResultA.A_DisplayName || '')
                        $('#sectionA_nric').val(ResultA.A_EntityKey || '')
                        $('#sectionA_dateOfBirth').val(ResultA.A_BirthDate || '')
+                        var DomainName=location.protocol + "//" + location.host+'/'+window.location.pathname.split('/')[1]+'/';
+                       var Address = DomainName+"BCMain/tabs.htm?Prefix=Ctc&TabParam=" + ResultA.PersonID + "&DynType=Entity&title=" + ResultA.A_DisplayName + "&subtitle="
+                       var likAdd = "<a target='_blank' href=" + Address + ">My Profile</a>"
+                       $('#ProfileID').html(likAdd);
 
                        if (ResultA.A_Gender == 'F') {
                            $('#sectionA_genderFemale').prop('checked', true)
@@ -217,7 +221,7 @@ function GetMemberShip(GroupID){
                        $('#sectionA_HouseBlock').val(ResultA.A_Block || '')
                        $('#sectionA_Unit').val(ResultA.A_Unit || '')
                        $('#sectionA_StreetName').val(ResultA.A_StreetName || '')
-                       $('#sectionA_StreetName').val(ResultA.A_BuildingName || '')
+                       $('#sectionA_BuildingName').val(ResultA.A_BuildingName || '')
                        $('#sectionA_PostalCode').val(ResultA.A_PostalCode || '')
 
                        var ResultB = data.d.RetData.Tbls[1].Rows[0];
@@ -283,18 +287,23 @@ function GetMemberShip(GroupID){
               if ((data) && (data.d.RetVal === -1)) {
                   if (data.d.RetData.Tbl.Rows.length > 0) {
                       var InitialAssesment = data.d.RetData.Tbl.Rows[0];
+                      CurrentID=InitialAssesment.ID||0;
                       var SectionAMDASMembership=InitialAssesment.SectionAMDASMembership||'';
                       if (SectionAMDASMembership == true) {
                           $('#sectionA_ordinaryMembership').prop('checked', true)
                       } else if (SectionAMDASMembership == false) {
                           $('#sectionA_ordinaryMembership').prop('checked', false)
                       }
+                      $('#sectionA_GroupID').val(InitialAssesment.GroupID || '');
                       $('#sectionA_FamilyName').val(InitialAssesment.SectionAFamilyName || '')
                       $('#sectionA_GivenName').val(InitialAssesment.SectionAGivenName || '')
                       $('#sectionA_DisplayName').val(InitialAssesment.SectionADisplayName || '')
                       $('#sectionA_nric').val(InitialAssesment.SectionANRIC || '')
-                      $('#sectionA_dateOfBirth').val(InitialAssesment.SectionABirth || '')
-
+                      $('#sectionA_dateOfBirth').val(InitialAssesment.SectionABirth || '');
+                      var DomainName=location.protocol + "//" + location.host+'/'+window.location.pathname.split('/')[1]+'/';
+                      var Address = DomainName+"BCMain/tabs.htm?Prefix=Ctc&TabParam=" + InitialAssesment.PersonID + "&DynType=Entity&title=" + InitialAssesment.SectionADisplayName + "&subtitle="
+                      var likAdd = "<a target='_blank' href=" + Address + ">My Profile</a>"
+                      $('#ProfileID').html(likAdd);
                        if (InitialAssesment.SectionAGender == 'F') {
                            $('#sectionA_genderFemale').prop('checked', true)
                        } else if (InitialAssesment.SectionAGender == 'M') {
@@ -369,6 +378,8 @@ function GetMemberShip(GroupID){
                        $('#sectionB_home').val(InitialAssesment.SectionBTelNoHome || '')
                        $('#sectionB_office').val(InitialAssesment.SectionBTelNoOffice || '')
                        $('#sectionB_email').val(InitialAssesment.SectionBEmail || '')
+
+
                        SectionCObj.SectionCFamilyName=InitialAssesment.SectionCFamilyName||'';
                        SectionCObj.SectionCGivenName=InitialAssesment.SectionCGivenName||'';
                        SectionCObj.SectionCDisplayName=InitialAssesment.SectionCDisplayName||'';
@@ -390,6 +401,11 @@ function GetMemberShip(GroupID){
                        $('#sectionC_office').val(InitialAssesment.SectionCTelNoOffice || '')
                        $('#sectionC_email').val(InitialAssesment.SectionCEmail || '')
 
+                       $('#sectionA_HouseBlock').val(InitialAssesment.AddrP1 || '')
+                       $('#sectionA_Unit').val(InitialAssesment.AddrP2 || '')
+                       $('#sectionA_StreetName').val(InitialAssesment.AddrP3 || '')
+                       $('#sectionA_BuildingName').val(InitialAssesment.AddrP4 || '')
+                       $('#sectionA_PostalCode').val(InitialAssesment.PostalCode || '')
 
                        $('#sectionD_PrimaryDiagnosis').val(InitialAssesment.SectionDPrimaryDiagnosis || '')
                        $('#sectionD_SecondaryDiagnosis').val(InitialAssesment.SectionDSecondaryDiagnosis || '')
@@ -776,7 +792,21 @@ function GetMemberShip(GroupID){
                         }
 
                       }
-                      $('#sectionG_Official').val(InitialAssesment.SectionGOfficial || '')
+                      $('#sectionG_Official').val(InitialAssesment.SectionGOfficial || '');
+                      var Declaration1=InitialAssesment.Declaration1||'';
+                      var Declaration2=InitialAssesment.Declaration2||'';
+                      if (Declaration1=='Declaration1') {
+                          $('#Declaration1').prop('checked', true);
+                      }else {
+                        $('#Declaration1').prop('checked', false);
+                      }
+                      if (Declaration2=='Declaration2') {
+                          $('#Declaration2').prop('checked', true);
+                      }else {
+                        $('#Declaration2').prop('checked', false);
+                      }
+
+
                   }
               }
           }
@@ -785,6 +815,7 @@ function GetMemberShip(GroupID){
   // save initial-assesment-form
   function SaveInitialAssesment() {
       var data = {};
+      data['ID'] = CurrentID;
       $('#pageContentWrapper :input,select').each(function () {
           var type = $(this).attr('type'), name = $(this).attr('name'), val = $(this).val();
           if (type == "radio") { val = $(':input[type="' + type + '"][name="' + name + '"]:checked').val() || ''; };
