@@ -1,6 +1,7 @@
   Foundation.Abide.defaults.patterns['NRIC'] = /^[A-Z]{1}[0-9]{7}[A-Z]{1}$/;
   Foundation.Abide.defaults.patterns['Mobile'] = /^\+{0,1}\d{8,}$/;
   $(document).foundation();
+    var SectionCObj = {};
   $(function () {
       //get cookie & loginID
       var appCookie = Cookies.getJSON('appCookie'),
@@ -25,17 +26,235 @@
       $('#submit').click(function () {
           SaveInitialAssesment();
       });
-      $.when(formSectionsInit(), formOthersInit(), GetRelationship('.sectionB_relationship'), GetRelationship('.sectionC_relationship')).then(function () {
+      $.when(formSectionsInit(), formOthersInit(), GetRelationship('.sectionB_relationship'), GetRelationship('.sectionC_relationship'),GetReviewedBy(),GetDeclaration()).then(function () {
           var ID = '';
           ID = GetQueryString('ID');
           if (ID.length > 0) {
               GetInitialAssesmentForm(ID)
           }
       });
+      $('#sectionA_race').change(function () {
+            if ($(this).val().indexOf('Others') >= 0) {
+                $('#sectionA_RaceOthersDiv').show();
+            }
+            else {
+                $('#sectionA_RaceOthersDiv').hide();
+            }
+      });
+      $('#sectionA_ordinaryMembership').click(function(){
+          if ($('#sectionA_ordinaryMembership').is(':checked') && $('#sectionA_GroupID').val().length>0) {
+              GetMemberShip($('#sectionA_GroupID').val());
+          }
+      });
+      $('#sectionA_GroupID').blur(function(){
+          if ($('#sectionA_ordinaryMembership').is(':checked') && $('#sectionA_GroupID').val().length>0) {
+              GetMemberShip($('#sectionA_GroupID').val());
+          }
+      });
+      $('#sectionC_SameASsectionB').click(function(){
+        if ($(this).is(':checked')) {
+            SectionCSameAsSsectionB($(this).val());
+        }else{
+          SectionCSameAsSsectionB('0');
+        }
+      });
+      var CurrentDate=new Date();
+      $('#sectionD_Date').val(convertDateTime(CurrentDate,'date'));
+      $('#sectionE_Date').val(convertDateTime(CurrentDate,'date'));
+      $('#sectionF_Date').val(convertDateTime(CurrentDate,'date'));
+
+      $('#sectionA_PostalCode').blur(function () {
+			if ($(this).val() !== '') {
+		        GetAddress();
+			}
+		});
+
 
   });
 
+  function GetAddress() {
+       var data = { 'Country': 'Singapore', 'PostalCode': $('#sectionA_PostalCode').val() };
+       $.ajax({
+           url: apiSrc + "BCMain/iCtc1.GetAddressByPostalCode.json",
+           method: "POST",
+           dataType: "json",
+           xhrFields: { withCredentials: true },
+           data: {
+               'data': JSON.stringify(data),
+               'WebPartKey': '021cb7cca70748ff89795e3ad544d5eb',
+               'ReqGUID': 'b4bbedbf-e591-4b7a-ad20-101f8f656277'
+           },
+           success: function (data) {
+               if ((data) && (data.d.RetVal === -1)) {
+                   if (data.d.RetData.Tbl.Rows.length > 0) {
+                       var ResultA = data.d.RetData.Tbl.Rows[0];
+                       $('#sectionA_HouseBlock').val(ResultA.AddrP1);
+                       $('#sectionA_Unit').val(ResultA.AddrP2);
+                       $('#sectionA_StreetName').val(ResultA.AddrP3);
+                       $('#sectionA_BuildingName').val(ResultA.AddrP4);
 
+                   }
+               }
+           }
+       });
+
+   }
+function GetReviewedBy(){
+  $('#sectionD_ReviewedBy,#sectionE_ReviewedBy,#sectionF_Reviewed').html('<option value="">-- Please Select --</option>');
+  var data = { '': '' }
+        $.ajax({
+            url: apiSrc + "BCMain/iCtc1.GetReviewedBy.json",
+            method: "POST",
+            dataType: "json",
+            xhrFields: { withCredentials: true },
+            data: {
+                'data': JSON.stringify(data),
+                'WebPartKey': '021cb7cca70748ff89795e3ad544d5eb',
+                'ReqGUID': 'b4bbedbf-e591-4b7a-ad20-101f8f656277'
+            },
+            success: function (data) {
+                if ((data) && (data.d.RetVal === -1)) {
+                    if (data.d.RetData.Tbl.Rows.length > 0) {
+                        var Result = data.d.RetData.Tbl.Rows;
+                        for (var i = 0; i < Result.length; i++) {
+                            $('#sectionD_ReviewedBy,#sectionE_ReviewedBy,#sectionF_Reviewed').append('<option value="' + Result[i].RoleID + '">' + Result[i].DisplayName + '</option>');
+                        }
+                    }
+                }
+                else {
+                    alert(data.d.RetMsg);
+                }
+            }
+        });
+}
+function GetMemberShip(GroupID){
+  var data = { 'GroupID': GroupID };
+      $.ajax({
+          url: apiSrc + "BCMain/iCtc1.GetMemberShipByGroupID.json",
+          method: "POST",
+          dataType: "json",
+          xhrFields: { withCredentials: true },
+          data: {
+              'data': JSON.stringify(data),
+              'WebPartKey': '021cb7cca70748ff89795e3ad544d5eb',
+              'ReqGUID': 'b4bbedbf-e591-4b7a-ad20-101f8f656277'
+          },
+          success: function (data) {
+              if ((data) && (data.d.RetVal === -1)) {
+
+                  if (data.d.RetData.Tbls[0].Rows.length>0) {
+                     var ResultA = data.d.RetData.Tbls[0].Rows[0];
+                       $('#sectionA_FamilyName').val(ResultA.A_FamilyName || '')
+                       $('#sectionA_GivenName').val(ResultA.A_GivenName || '')
+                       $('#sectionA_DisplayName').val(ResultA.A_DisplayName || '')
+                       $('#sectionA_nric').val(ResultA.A_EntityKey || '')
+                       $('#sectionA_dateOfBirth').val(ResultA.A_BirthDate || '')
+
+                       if (ResultA.A_Gender == 'F') {
+                           $('#sectionA_genderFemale').prop('checked', true)
+                       } else if (ResultA.A_Gender == 'M') {
+                           $('#sectionA_genderMale').prop('checked', true)
+                       } else {
+
+                       }
+                       var SectionARace = ResultA.A_Race || '';
+                       if (SectionARace.length > 0) {
+                           $('#sectionA_race').val(SectionARace)
+                           var sectionA_race = $('#sectionA_race').val() || '';
+                           if (sectionA_race.length <= 0) {
+                               $('#sectionA_RaceOthersDiv').show();
+                               $('#sectionA_race').val('Others')
+                               $('#sectionA_raceOthersText').val(SectionARace)
+                           }
+                       }
+                       var sectionA_language = ResultA.A_Language || '';
+                       if (sectionA_language.length > 0) {
+
+                           var sectionA_languageArr = sectionA_language.split(',');
+                           var Otherlanguage = '';
+
+                           for (var i = 0; i < sectionA_languageArr.length; i++) {
+                               if (sectionA_languageArr[i].length > 0) {
+                                   var flag = false;
+                                   $('input[name="sectionA_language"]').each(function () {
+                                       if ($(this).val() == sectionA_languageArr[i]) { $(this).prop('checked', true); flag = true; }
+                                   });
+                                   if (flag == false) {
+                                       Otherlanguage += sectionA_languageArr[i] + ' ';
+                                   }
+                               }
+
+                           }
+                           if (Otherlanguage.length > 0) {
+                               $('#sectionA_languageOthersText').val(Otherlanguage);
+                               $('input[name="sectionA_language"]').each(function () {
+                                   if ($(this).val() == 'Others') { $(this).prop('checked', true); }
+                               });
+                           }
+                       }
+
+                       var sectionA_education = ResultA.A_Education || '';
+                       if (sectionA_education.length > 0) {
+
+                           var OtherEducation = '';
+                           var flag = false;
+                           $('input[name="sectionA_education"]').each(function () {
+                               if ($(this).val() == sectionA_education) { $(this).prop('checked', true); flag = true; }
+                           });
+                           if (flag == false) {
+                               OtherEducation += sectionA_education;
+                           }
+                           if (OtherEducation.length > 0) {
+                               $('#sectionA_educationOthersText').val(OtherEducation);
+                               $('#sectionA_educationOthers').prop('checked', true)
+                           }
+                       }
+                       $('#sectionA_mobile').val(ResultA.A_Mobile || '')
+                       $('#sectionA_home').val(ResultA.A_Home || '')
+                       $('#sectionA_office').val(ResultA.A_Office || '')
+                       $('#sectionA_email').val(ResultA.A_Email || '')
+
+                       $('#sectionA_HouseBlock').val(ResultA.A_Block || '')
+                       $('#sectionA_Unit').val(ResultA.A_Unit || '')
+                       $('#sectionA_StreetName').val(ResultA.A_StreetName || '')
+                       $('#sectionA_StreetName').val(ResultA.A_BuildingName || '')
+                       $('#sectionA_PostalCode').val(ResultA.A_PostalCode || '')
+
+                       var ResultB = data.d.RetData.Tbls[1].Rows[0];
+                        if (data.d.RetData.Tbls[1].Rows.length>0) {
+                          $('#sectionB_FamilyName').val(ResultB.B_FamilyName || '')
+                          $('#sectionB_GivenName').val(ResultB.B_GivenName || '')
+                          $('#sectionB_DisplayName').val(ResultB.B_DisplayName || '')
+                          $('#sectionB_nric').val(ResultB.B_EntityKey || '')
+                          $('#sectionB_dateOfBirth').val(ResultB.B_BirthDate || '')
+                          $('#sectionB_relationship').val(ResultB.B_Relationship || '')
+                          $('#sectionB_mobile').val(ResultB.B_Mobile || '')
+                          $('#sectionB_home').val(ResultB.B_Home || '')
+                          $('#sectionB_office').val(ResultB.B_Office || '')
+                          $('#sectionB_email').val(ResultB.B_Email || '')
+                        }
+
+
+                       if (data.d.RetData.Tbls[2].Rows.length>0) {
+                         var ResultC = data.d.RetData.Tbls[2].Rows[0];
+                         $('#sectionC_FamilyNameMain').val(ResultC.C_FamilyName || '');
+                         $('#sectionC_GivenNameMain').val(ResultC.C_GivenName || '');
+                         $('#sectionC_DisplayNameMain').val(ResultC.C_DisplayName || '');
+                         $('#sectionC_nric').val(ResultC.C_EntityKey || '');
+                         $('#sectionC_dateOfBirth').val(ResultC.C_BirthDate || '');
+                         $('#sectionC_relationship').val(ResultC.C_Relationship || '');
+                         $('#sectionC_mobile').val(ResultC.C_Mobile || '');
+                         $('#sectionC_home').val(ResultC.C_Home || '');
+                         $('#sectionC_office').val(ResultC.C_Office || '');
+                         $('#sectionC_email').val(ResultC.C_Email || '');
+                       }
+
+                  }
+              }
+          }
+      });
+
+}
   //get url param
   function GetQueryString(name) {
       var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -66,17 +285,15 @@
                       var InitialAssesment = data.d.RetData.Tbl.Rows[0];
                       var SectionAMDASMembership=InitialAssesment.SectionAMDASMembership||'';
                       if (SectionAMDASMembership == true) {
-                          $('#sectionA_ordinaryMembershipYes').prop('checked', true)
+                          $('#sectionA_ordinaryMembership').prop('checked', true)
                       } else if (SectionAMDASMembership == false) {
-                          $('#sectionA_ordinaryMembershipNo').prop('checked', true)
-                      } else {
-
+                          $('#sectionA_ordinaryMembership').prop('checked', false)
                       }
                       $('#sectionA_FamilyName').val(InitialAssesment.SectionAFamilyName || '')
                       $('#sectionA_GivenName').val(InitialAssesment.SectionAGivenName || '')
-                       $('#sectionA_DisplayName').val(InitialAssesment.SectionADisplayName || '')
-                       $('#sectionA_nric').val(InitialAssesment.SectionANRIC || '')
-                       $('#sectionA_dateOfBirth').text(InitialAssesment.SectionABirth || '')
+                      $('#sectionA_DisplayName').val(InitialAssesment.SectionADisplayName || '')
+                      $('#sectionA_nric').val(InitialAssesment.SectionANRIC || '')
+                      $('#sectionA_dateOfBirth').val(InitialAssesment.SectionABirth || '')
 
                        if (InitialAssesment.SectionAGender == 'F') {
                            $('#sectionA_genderFemale').prop('checked', true)
@@ -87,13 +304,14 @@
                        }
                        var SectionARace = InitialAssesment.SectionARace || '';
                        if (SectionARace.length > 0) {
-                           $('#sectionA_race').val(SectionARace)
-                           if ($("#sectionA_race").is(":checked")==false||$('#sectionA_race').val().length <= 0) {
-                               $('#sectionA_raceOthersText').val(SectionARace)
-                               $('#sectionA_raceOthersText').prop('disabled', '');
-                               $('#sectionA_race').val('Others')
-                           }
-                       }
+                          $('#sectionA_race').val(SectionARace)
+                          var sectionA_race=$('#sectionA_race').val()||'';
+                          if (sectionA_race.length <=0) {
+                            $('#sectionA_RaceOthersDiv').show();
+                            $('#sectionA_race').val('Others')
+                            $('#sectionA_raceOthersText').val(SectionARace)
+                          }
+                      }
                        var sectionA_language = InitialAssesment.SectionALanguageSpoken || '';
                        if (sectionA_language.length > 0) {
 
@@ -151,7 +369,16 @@
                        $('#sectionB_home').val(InitialAssesment.SectionBTelNoHome || '')
                        $('#sectionB_office').val(InitialAssesment.SectionBTelNoOffice || '')
                        $('#sectionB_email').val(InitialAssesment.SectionBEmail || '')
-
+                       SectionCObj.SectionCFamilyName=InitialAssesment.SectionCFamilyName||'';
+                       SectionCObj.SectionCGivenName=InitialAssesment.SectionCGivenName||'';
+                       SectionCObj.SectionCDisplayName=InitialAssesment.SectionCDisplayName||'';
+                       SectionCObj.SectionCNRIC=InitialAssesment.SectionCNRIC||'';
+                       SectionCObj.SectionCBirth=InitialAssesment.SectionCBirth||'';
+                       SectionCObj.SectionCRelationship=InitialAssesment.SectionCRelationship||'';
+                       SectionCObj.SectionCHandphone=InitialAssesment.SectionCHandphone||'';
+                       SectionCObj.SectionCTelNoHome=InitialAssesment.SectionCTelNoHome||'';
+                       SectionCObj.SectionCTelNoOffice=InitialAssesment.SectionCTelNoOffice||'';
+                       SectionCObj.SectionCEmail=InitialAssesment.SectionCEmail||'';
                        $('#sectionC_FamilyNameMain').val(InitialAssesment.SectionCFamilyName || '')
                        $('#sectionC_GivenNameMain').val(InitialAssesment.SectionCGivenName || '')
                        $('#sectionC_DisplayNameMain').val(InitialAssesment.SectionCDisplayName || '')
@@ -691,9 +918,9 @@
       function pad(s) { return (s < 10) ? '0' + s : s; }
       var d = new Date(inputFormat);
       if (type == 'date') {
-          return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('/');
+          return [d.getFullYear() ,pad(d.getMonth() + 1), pad(d.getDate())].join('-');
       } else if (type == 'datetime') {
-          return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('/') + ' ' + [pad(d.getHours()), pad(d.getMinutes()), pad(d.getSeconds())].join(':');
+          return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('-') + ' ' + [pad(d.getHours()), pad(d.getMinutes()), pad(d.getSeconds())].join(':');
       } else if (type == 'time') {
           return [pad(d.getHours()), pad(d.getMinutes()), pad(d.getSeconds())].join(':');
       }
@@ -824,3 +1051,41 @@
       $(form).find('fieldset :input').removeAttr('disabled');
       return result;
   }
+
+  function SectionCSameAsSsectionB(IsChecked){
+    if (IsChecked=='1') {
+      $('#sectionC_FamilyNameMain').val($('#sectionB_FamilyName').val())
+      $('#sectionC_GivenNameMain').val($('#sectionB_GivenName').val())
+      $('#sectionC_DisplayNameMain').val($('#sectionB_DisplayName').val())
+      $('#sectionC_nric').val($('#sectionB_nric').val())
+      $('#sectionC_relationship').val($('#sectionB_relationship').val())
+      $('#sectionC_dateOfBirth').val($('#sectionB_dateOfBirth').val());
+      $('#sectionC_mobile').val($('#sectionB_mobile').val())
+      $('#sectionC_home').val($('#sectionB_home').val())
+      $('#sectionC_office').val($('#sectionB_office').val())
+      $('#sectionC_email').val($('#sectionB_email').val())
+    }else{
+      $('#sectionC_FamilyNameMain').val(SectionCObj.SectionCFamilyName);
+      $('#sectionC_GivenNameMain').val(SectionCObj.SectionCGivenName);
+      $('#sectionC_DisplayNameMain').val(SectionCObj.SectionCDisplayName);
+      $('#sectionC_nric').val(SectionCObj.SectionCNRIC);
+      $('#sectionC_dateOfBirth').val(SectionCObj.SectionCBirth);
+      $('#sectionC_relationship').val(SectionCObj.SectionCRelationship);
+      $('#sectionC_mobile').val(SectionCObj.SectionCHandphone);
+      $('#sectionC_home').val(SectionCObj.SectionCTelNoHome);
+      $('#sectionC_office').val(SectionCObj.SectionCTelNoOffice);
+      $('#sectionC_email').val(SectionCObj.SectionCEmail);
+    }
+
+  }
+
+  function GetDeclaration(){
+        return $.JSONPost('iCtc1.Lookup_Get.json', { 'LookupCat': 'Declaration' }).done(function (data) {
+            var R = data.d.RetData.Tbl.Rows, RowCnt = R.length;
+            var html = '';
+            for (var i = 0; i < RowCnt; i++) {
+                html += ' <label for="' + R[i].LookupKey + '" class="inlineblock"><input  type="checkbox"  name="Declaration" value="' + R[i].LookupKey + '" id="' + R[i].LookupKey + '" required/> &nbsp;' + R[i].Description + '</label>';
+            }
+            $("#DeclarationList").html(html);
+        });
+    }

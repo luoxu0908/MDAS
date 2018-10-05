@@ -11,14 +11,16 @@
         <h2>Section A</h2>
         <p>Main applicant of subsidy schemes - person with muscular dystophy (PMD)</p>
         <div>
-            <div class="labelText">I have a valid MDAS Ordinary Membership</div>
-            <div class="radioGroup">
-                <label><input type="radio" name="sectionA_ordinaryMembership" id="sectionA_ordinaryMembershipYes" value="1"> Yes</label>
-                <label><input type="radio" name="sectionA_ordinaryMembership" id="sectionA_ordinaryMembershipNo" value="0"> No</label>
+            <div class="labelText"></div>
+            <div class="checkboxGroup">
+               <label>I have a valid MDAS Ordinary Membership&nbsp;&nbsp; <input type="checkbox" name="sectionA_ordinaryMembership" id="sectionA_ordinaryMembership" value="1"></label>
             </div>
-            <p><small><i>(If No, please complete Section B)</i></small></p>
+            <div>
+                <label for="sectionA_FamilyName">Membership GroupID</label>
+                <input type="text" id="sectionA_GroupID" name="sectionA_GroupID"/>
+            </div>
         </div>
-        <h3>Name (as in NRIC)</h3>
+        <h3>Name (as in NRIC)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="navProfile" title="Profile">My Profile</a></h3>
         <div>
             <label for="sectionA_FamilyName">Family/Surname</label>
             <input type="text" id="sectionA_FamilyName" name="sectionA_FamilyName" />
@@ -28,8 +30,8 @@
             <input type="text" id="sectionA_GivenName" name="sectionA_GivenName"/>
         </div>
         <div>
-            <label for="sectionA_DisplayName">Display Name warning</label>
-            <input type="text" id="sectionA_DisplayName" name="sectionA_DisplayName"  required />
+            <label for="sectionA_DisplayName">Display Name</label>
+            <input type="text" id="sectionA_DisplayName" name="sectionA_DisplayName" />
         </div>
         <div>
             <label for="sectionA_nric">NRIC / Birth Cert No.</label>
@@ -59,7 +61,7 @@
                 <option value="Others">Others</option>
             </select>
         </div>
-        <div class="">
+        <div class="" id="sectionA_RaceOthersDiv" style="display:none">
             <label for="sectionA_raceOthersText">Others</label>
             <input type="text" id="sectionA_raceOthersText" name="sectionA_raceOthers" data-form-other-text="true" />
         </div>
@@ -108,8 +110,31 @@
         </div>
         <div>
             <label for="sectionA_email">Email</label>
-            <input type="email" id="sectionA_email" name="sectionA_email" pattern="email" required/>
+            <input type="email" id="sectionA_email" name="sectionA_email" pattern="email"/>
         </div>
+        <div>
+            <label for="sectionA_PostalCode">Postal Code</label>
+            <input type="text" id="sectionA_PostalCode" name="sectionA_PostalCode"/>
+        </div>
+        <div class="columns4">
+            <label for="sectionA_HouseBlock">House/Block No</label>
+            <input type="text" id="sectionA_HouseBlock" name="sectionA_HouseBlock" />
+
+        </div>
+        <div class="columns3">
+            <label for="sectionA_Unit">Level/Unit(#00-0000)</label>
+            <input type="text" id="sectionA_Unit" name="sectionA_Unit" />
+        </div>
+        <div class="columns4">
+            <label for="sectionA_StreetName">Street Name</label>
+            <input type="text" id="sectionA_StreetName" name="sectionA_StreetName" />
+
+        </div>
+        <div class="columns3">
+            <label for="sectionA_BuildingName">Building Name</label>
+            <input type="text" id="sectionA_BuildingName" name="sectionA_BuildingName" />
+        </div>
+
     </fieldset>
     <fieldset id="sectionB">
         <h2>Section B</h2>
@@ -129,7 +154,7 @@
         </div>
         <div>
             <label for="sectionB_nric">NRIC / Birth Cert No.</label>
-            <input type="text" id="sectionB_nric" name="sectionB_nric" pattern="NRIC" />
+            <input type="text" id="sectionB_nric" name="sectionB_nric" pattern="NRIC" required />
             <span class="form-error">Invalid NRIC</span>
         </div>
         <div>
@@ -160,7 +185,7 @@
     </fieldset>
     <fieldset id="sectionC">
         <h2>Section C</h2>
-        <p>Particulars of caregiver (If not same as Section B)</p>
+        <p><label>Section C to have a check box to indicate whether section B is the same as Section C.&nbsp;&nbsp; <input type="checkbox" name="sectionC_SameASsectionB" id="sectionC_SameASsectionB" value="1"></label></p>
         <h3>Name (as in NRIC)</h3>
         <div>
             <label for="sectionC_FamilyNameMain">Family/Surname</label>
@@ -176,7 +201,7 @@
         </div>
         <div>
             <label for="sectionC_nric">NRIC / Birth Cert No.</label>
-            <input type="text" id="sectionC_nric" name="sectionC_nric" pattern="NRIC" />
+            <input type="text" id="sectionC_nric" name="sectionC_nric" pattern="NRIC"  required/>
             <span class="form-error">Invalid NRIC</span>
         </div>
         <div>
@@ -185,7 +210,7 @@
         </div>
         <div>
             <label for="sectionC_relationship">Relationship to Main Applicant (PMD)</label>
-            <select id="sectionC_relationship" name="sectionC_relationship" class="sectionC_relationship" required></select>
+            <select id="sectionC_relationship" name="sectionC_relationship" class="sectionC_relationship" ></select>
         </div>
         <h3>Contact Details</h3>
         <div>
@@ -334,12 +359,12 @@
         </div>
         <div class="columns4">
             <label>Reviewed by</label>
-            <input type="text" id="sectionD_ReviewedBy" name="sectionD_ReviewedBy" />
-
+            <select name="sectionD_ReviewedBy" id="sectionD_ReviewedBy">
+            </select>
         </div>
         <div class="columns3">
             <label>Date</label>
-            <input type="date" id="sectionD_Date" name="sectionD_Date" />
+            <input type="date" id="sectionD_Date" name="sectionD_Date" disabled="disabled"  />
 
         </div>
     </fieldset>
@@ -617,12 +642,12 @@
         </div>
         <div class="columns4">
             <label>Reviewed by</label>
-            <input type="text" id="sectionE_ReviewedBy" name="sectionE_ReviewedBy" />
-
+            <select name="sectionE_ReviewedBy" id="sectionE_ReviewedBy">
+            </select>
         </div>
         <div class="columns3">
             <label>Date</label>
-            <input type="date" id="sectionE_Date" name="sectionE_Date" />
+            <input type="date" id="sectionE_Date" disabled="disabled" name="sectionE_Date" />
 
         </div>
     </fieldset>
@@ -669,12 +694,12 @@
         </div>
         <div class="columns4">
             <label>Reviewed by</label>
-            <input type="text" id="sectionF_Reviewed" name="sectionF_Reviewed" />
-
+            <select name="sectionF_Reviewed" id="sectionF_Reviewed">
+            </select>
         </div>
         <div class="columns3">
             <label>Date</label>
-            <input type="date" id="sectionF_Date" name="sectionF_Date" />
+            <input type="date" id="sectionF_Date" disabled="disabled" name="sectionF_Date" />
 
         </div>
 
@@ -707,6 +732,9 @@
         <div>
             <label>For official use only</label>
             <textarea id="sectionG_Official" name="sectionG_Official"></textarea>
+        </div>
+        <div id="DeclarationList">
+
         </div>
     </fieldset>
     <footer class="buttonsGroup">
