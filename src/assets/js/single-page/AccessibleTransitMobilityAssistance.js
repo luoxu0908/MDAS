@@ -1,5 +1,6 @@
 Foundation.Abide.defaults.patterns['NRIC'] = /^[A-Z]{1}[0-9]{7}[A-Z]{1}$/;
 Foundation.Abide.defaults.patterns['Mobile'] =/^\+{0,1}\d{8,}$/;
+var CurrentID=0;
 $(document).foundation();
 $(function(){
   //get cookie & loginID
@@ -7,54 +8,63 @@ $(function(){
       loginID = appCookie.loginID;
     // save data
     $('#submit').click(function(){
-      SaveMuscularDystrophyAssociation();
+      SaveAccessibleTransitMobilityAssistance();
     });
     //get data
-    $.when(formSectionsInit(),formOthersInit(),GetRelationship('.sectionB_relationship'),GetDropdownList('#sectionC_NameHospital', 'MembershipHospital')).then(function(){
+    $.when(formSectionsInit(),formOthersInit(),GetRelationship('.sectionB_relationship')).then(function(){
       var ID= '';
       ID=GetQueryString('ID');
       if (ID.length>0) {
         GetAccessibleTransitMobilityAssistance(ID)
       }
     });
-    $('[name=sectionC_PurposeTransport]').change(function(){
-      if ($(this).prop('checked')) {
-        
-      }
-    })
-});
-
-//geneare drop down optioms
-function GetDropdownList(id, category) {
-  var data = {
-    'LookupCat': category
-  };
-  $.ajax({
-    url: apiSrc + "BCMain/iCtc1.Lookup_Get.json",
-    method: "POST",
-    dataType: "json",
-    xhrFields: {
-      withCredentials: true
-    },
-    data: {
-      'data': JSON.stringify(data),
-      'WebPartKey': '021cb7cca70748ff89795e3ad544d5eb',
-      'ReqGUID': 'b4bbedbf-e591-4b7a-ad20-101f8f656277'
-    },
-    success: function(data) {
-      if ((data) && (data.d.RetVal === -1)) {
-        if (data.d.RetData.Tbl.Rows.length > 0) {
-          var lookup = data.d.RetData.Tbl.Rows;
-          for (var i = 0; i < lookup.length; i++) {
-            $(id).append('<option value="' + lookup[i].LookupKey + '">' + lookup[i].Description + '</option>');
+     $('[name=sectionC_PurposeTransport]').each(function(index, el) {
+       $(el).change(function(){
+          var val=$(el).val();
+          var checked=$(el).prop('checked');
+          if (index==0) {
+             checked?($('#SECTIONC1').show()):($('#SECTIONC1').hide())
           }
-        }
-      } else {
-        alert(data.d.RetMsg);
+          else if (index==1){
+              checked?($('#SECTIONC2').show()):($('#SECTIONC2').hide())
+          }
+
+
+       })
+     });
+      $('#sectionA_PostalCode').blur(function () {
+      if ($(this).val() !== '') {
+            GetAddress();
       }
-    }
-  });
-}
+      });
+});
+ function GetAddress() {
+       var data = { 'Country': 'Singapore', 'PostalCode': $('#sectionA_PostalCode').val() };
+       $.ajax({
+           url: apiSrc + "BCMain/iCtc1.GetAddressByPostalCode.json",
+           method: "POST",
+           dataType: "json",
+           xhrFields: { withCredentials: true },
+           data: {
+               'data': JSON.stringify(data),
+               'WebPartKey': '021cb7cca70748ff89795e3ad544d5eb',
+               'ReqGUID': 'b4bbedbf-e591-4b7a-ad20-101f8f656277'
+           },
+           success: function (data) {
+               if ((data) && (data.d.RetVal === -1)) {
+                   if (data.d.RetData.Tbl.Rows.length > 0) {
+                       var ResultA = data.d.RetData.Tbl.Rows[0];
+                       $('#sectionA_HouseBlock').val(ResultA.AddrP1);
+                       $('#sectionA_Level').val(ResultA.AddrP2);
+                       $('#sectionA_StreetName').val(ResultA.AddrP3);
+                       $('#sectionA_BuildingName').val(ResultA.AddrP4);
+
+                   }
+               }
+           }
+       });
+
+   }
 
 //get url param
 function GetQueryString(name) {
@@ -84,14 +94,10 @@ function GetAccessibleTransitMobilityAssistance(ID) {
               if ((data) && (data.d.RetVal === -1)) {
                   if (data.d.RetData.Tbl.Rows.length > 0) {
                       var AccessibleTransit = data.d.RetData.Tbl.Rows[0];
-                      var sectionA_ordinaryMembership=AccessibleTransit.SectionAMDASMembership||'';
-                      if (sectionA_ordinaryMembership == true) {
-                        $('#sectionA_ordinaryMembershipYes').prop('checked', true)
-                      }else if(sectionA_ordinaryMembership == false){
-                          $('#sectionA_ordinaryMembershipNo').prop('checked', true)
-                      }else {
-
-                      }
+                      CurrentID=AccessibleTransit.ID||0;
+                      $('#sectionA_Ordinary').prop('checked',true);
+                      $('#GroupIDDiv').show();$('#GroupID').val(AccessibleTransit.GroupID||'G16026');
+                     
                       $('#sectionA_FamilyName').val(AccessibleTransit.SectionAFamilyName || '')
                       $('#sectionA_GivenName').val(AccessibleTransit.SectionAGivenName|| '')
                       $('#sectionA_DisplayName').val(AccessibleTransit.SectionADisplayName|| '')
@@ -101,17 +107,25 @@ function GetAccessibleTransitMobilityAssistance(ID) {
                       $('#sectionA_office').val(AccessibleTransit.SectionATelNoOffice|| '')
                       $('#sectionA_mobile').val(AccessibleTransit.SectionAHandphone|| '')
                       $('#sectionA_email').val(AccessibleTransit.SectionAEmail|| '')
+                     
 
-                      $('#sectionB_FamilyName').val(AccessibleTransit.SectionAFamilyName || '')
-                      $('#sectionB_GivenName').val(AccessibleTransit.SectionAGivenName|| '')
-                      $('#sectionB_DisplayName').val(AccessibleTransit.SectionADisplayName|| '')
-                      $('#sectionB_nric').val(AccessibleTransit.SectionANRIC|| '')
+                      $('#sectionA_PostalCode').val(AccessibleTransit.SectionAPostalCode|| '')
+                      $('#sectionA_BlockNo').val(AccessibleTransit.SectionABlockNo|| '')
+                      $('#sectionA_Level').val(AccessibleTransit.SectionALevelUnit|| '')
+                      $('#sectionA_BuildingName').val(AccessibleTransit.SectionABuildingName|| '')
+                      $('#sectionA_StreetName').val(AccessibleTransit.SectionAStreetName|| '')
+   
+
+                      $('#sectionB_FamilyName').val(AccessibleTransit.SectionBFamilyName || '')
+                      $('#sectionB_GivenName').val(AccessibleTransit.SectionBGivenName|| '')
+                      $('#sectionB_DisplayName').val(AccessibleTransit.SectionBDisplayName|| '')
+                      $('#sectionB_nric').val(AccessibleTransit.SectionBNRIC|| '')
                       $('#sectionB_dateOfBirth').val(AccessibleTransit.SectionBBirth|| '')
-                      $('#sectionB_home').val(AccessibleTransit.SectionATelNoHome|| '')
-                      $('#sectionB_office').val(AccessibleTransit.SectionATelNoOffice|| '')
-                      $('#sectionB_mobile').val(AccessibleTransit.SectionAHandphone|| '')
+                      $('#sectionB_home').val(AccessibleTransit.SectionBHandphone|| '')
+                      $('#sectionB_office').val(AccessibleTransit.SectionBTelNoHome|| '')
+                      $('#sectionB_mobile').val(AccessibleTransit.SectionBTelNoOffice|| '')
                       $('#sectionB_relationship').val(AccessibleTransit.SectionBRelationship|| '')
-                      $('#sectionB_email').val(AccessibleTransit.SectionAEmail|| '')
+                      $('#sectionB_email').val(AccessibleTransit.SectionBEmail|| '')
 
 
 
@@ -125,7 +139,13 @@ function GetAccessibleTransitMobilityAssistance(ID) {
                               });
                           }
                       }
-
+                      if (sectionC_PurposeTransport.lastIndexOf("for Schooling")>-1) {
+                        $('#SECTIONC1').show();
+                      }
+                      if (sectionC_PurposeTransport.lastIndexOf("for Medical Consultation")>-1) {
+                         $('#SECTIONC2').show();
+                      }
+                    
                       var sectionC_ModeTransport = AccessibleTransit.SectionCModeTransport || '';
                       if (sectionC_ModeTransport.length > 0) {
 
@@ -188,6 +208,10 @@ function GetAccessibleTransitMobilityAssistance(ID) {
                         }
 
                       }
+                      $('#sectionC_PurposeConsultation2').val(AccessibleTransit.sectionCPurposeConsultation2||'');
+                      $('#sectionC_PurposeFrequency2').val(AccessibleTransit.sectionCPurposeFrequency2||'');
+                      $('#sectionC_PurposeConsultation3').val(AccessibleTransit.sectionCPurposeConsultation3||'');
+                      $('#sectionC_PurposeFrequency3').val(AccessibleTransit.sectionCPurposeFrequency3||'');
 
                       var sectionE_ProtectionDeclaration=AccessibleTransit.SectionEProtectionDeclaration || '';
                       var sectionE_ProtectionDeclarationArr = sectionE_ProtectionDeclaration.split(',');
@@ -246,7 +270,41 @@ function formSectionValidate(form,isAll) {
   return result;
 }
 
-
+function LoadDataByordinaryNo(OrdinaryNo){
+    $.ajax({
+    url: apiSrc + "BCMain/iCtc1.GetAccessMemberShipByGroupID.json",
+    method: "POST",
+    dataType: "json",
+    xhrFields: {
+      withCredentials: true
+    },
+    data: {
+      'data': JSON.stringify({'GroupID':OrdinaryNo}),
+      'WebPartKey': '021cb7cca70748ff89795e3ad544d5eb',
+      'ReqGUID': 'b4bbedbf-e591-4b7a-ad20-101f8f656277'
+    },
+    success: function(data) {
+      if ((data) && (data.d.RetVal === -1)) {
+        //section a
+        if (data.d.RetData.Tbls[0].Rows.length>0) {
+           var row=data.d.RetData.Tbls[0].Rows[0];
+           for (e in row){
+           $('#section'+e).val(row[e]);
+           }
+        }
+          //section b
+        if (data.d.RetData.Tbls[1].Rows.length>0) {
+          var row=data.d.RetData.Tbls[1].Rows[0];
+           for (e in row){
+             $('#section'+e).val(row[e]);
+           }
+        }       
+      } else {
+        alert(data.d.RetMsg);
+      }
+    }
+  });
+}
 function GetRelationship(sel) {
   $.ajax({
     url: apiSrc + "BCMain/iCtc1.SearchRelationshipType.json",
@@ -417,11 +475,12 @@ function formSectionsInit() {
 
 
 // save initial-assesment-form
-function SaveMuscularDystrophyAssociation(){
+function SaveAccessibleTransitMobilityAssistance(){
   if (!formSectionValidate($('#pageContentWrapper'),1)) {
   return false;
 }
   var data={};
+  data['ID'] = CurrentID;
   $('#pageContentWrapper :input,select').each(function(){
     var type=$(this).attr('type'), name= $(this).attr('name'),val=$(this).val();
     if (type=="radio") { val=$(':input[type="'+type+'"][name="'+name+'"]:checked').val()||'';};

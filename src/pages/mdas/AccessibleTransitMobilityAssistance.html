@@ -11,12 +11,14 @@
         <h2>Section A</h2>
         <p>Main applicant of subsidy schemes - person with muscular dystropHhy (PMD)</p>
         <div>
-            <div class="labelText">I have a valid MDAS Ordinary Membership</div>
-            <div class="radioGroup">
-                <label class="labelText" for="sectionA_ordinaryMembershipYes"><input type="radio" name="sectionA_ordinaryMembership" id="sectionA_ordinaryMembershipYes" value="1"> Yes</label>
-                <label class="labelText" for="sectionA_ordinaryMembershipNo"><input type="radio" name="sectionA_ordinaryMembership" id="sectionA_ordinaryMembershipNo" value="0"> No</label>
+            <label class="labelText" for="sectionA_Ordinary">I have a valid MDAS Ordinary Membership<span class="error warning">*</span> <input type="checkbox" onchange="$('#GroupIDDiv').toggle();" id="sectionA_Ordinary" required> </label>
+            <div id="GroupIDDiv" style="display: none;">
+            <label class="labelText" for="GroupID">Membership GroupID<span class="error warning">*</span> </label>
+            <input type="text" id="GroupID" name="GroupID" onchange="LoadDataByordinaryNo($(this).val());return false;"  required>
             </div>
-            <p><small><i>(If No, please complete Section B)</i></small></p>
+            <div class="radioGroup" style="display: none">
+                <label class="labelText" for="sectionA_ordinaryMembershipYes"><input type="radio" name="sectionA_ordinaryMembership" id="sectionA_ordinaryMembershipYes" value="1"> Yes</label>
+            </div>
         </div>
         <h3>Name (as in NRIC)</h3>
         <div>
@@ -57,6 +59,28 @@
         <div>
             <label class="labelText" for="sectionA_email">Email</label>
             <input type="email" id="sectionA_email" name="sectionA_email" pattern="email" />
+        </div>
+
+         <h3>Mailing Address</h3>
+         <div>
+            <label for="sectionA_PostalCode">Postal Code</label>
+            <input type="text" id="sectionA_PostalCode" name="sectionA_PostalCode" />
+        </div>
+        <div>
+            <label for="sectionA_BlockNo">House/Block No</label>
+            <input type="text" id="sectionA_BlockNo" name="sectionA_BlockNo" />
+        </div>
+        <div>
+            <label for="sectionA_Level">Level/Unit(#00-0000)</label>
+            <input type="text" id="sectionA_Level" name="sectionA_Level" />
+        </div>
+        <div>
+            <label for="sectionA_BuildingName">Building Name</label>
+            <input type="text" id="sectionA_BuildingName" name="sectionA_BuildingName" />
+        </div>
+        <div>
+            <label for="sectionA_StreetName">Street Name</label>
+            <input type="text" id="sectionA_StreetName" name="sectionA_StreetName" />
         </div>
     </fieldset>
     <fieldset id="sectionB">
@@ -129,6 +153,7 @@
 
             </div>
         </div>
+        <div id="SECTIONC1" style="display: none;">
         <h3>SECTION C1</h3>
         <p>information on subsidy for schooling</p>
         <div>
@@ -156,6 +181,8 @@
             <label class="labelText" for="sectionC_TransportCostMonth">Transport cost per month</label>
             <input type="text" id="sectionC_TransportCostMonth" placeholder="$" name="sectionC_TransportCostMonth" />
         </div>
+        </div>
+        <div id="SECTIONC2" style="display: none;">
         <h3>SECTION C2</h3>
         <p>information on subsidy for medical consultation</p>
         <div>
@@ -173,6 +200,23 @@
         <div>
             <label class="labelText" for="sectionC_TransportCostC2">Frequency</label>
             <input type="text" id="sectionC_PurposeFrequency" placeholder="$" name="sectionC_PurposeFrequency" />
+        </div>
+         <div>
+            <label class="labelText" for="sectionC_TransportCostC22">Purpose of Consultation2: (related to MD only)</label>
+            <input type="text" id="sectionC_PurposeConsultation2"2 placeholder="$" name="sectionC_PurposeConsultation2" />
+        </div>
+        <div>
+            <label class="labelText" for="sectionC_TransportCostC22">Frequency2</label>
+            <input type="text" id="sectionC_PurposeFrequency2" placeholder="$" name="sectionC_PurposeFrequency2" />
+        </div>
+         <div>
+            <label class="labelText" for="sectionC_TransportCostC23">Purpose of Consultation3: (related to MD only)</label>
+            <input type="text" id="sectionC_PurposeConsultation3" placeholder="$" name="sectionC_PurposeConsultation3" />
+        </div>
+        <div>
+            <label class="labelText" for="sectionC_TransportCostC23">Frequency3</label>
+            <input type="text" id="sectionC_PurposeFrequency3" placeholder="$" name="sectionC_PurposeFrequency3" />
+        </div>
         </div>
         <div>
             <label class="labelText"><u>Note</u>: Each claim must be supported with original copy of transport receipt, doctor’s certification and MDAS claim form. </label>
@@ -210,17 +254,17 @@
         <h3>Personal data protection act declaration</h3>
         <p>I fully understand and agree that the personal information which I have provided may be disclosed to other agencies or individuals as per the provisions of the Act.</p>
         <div>
-            <label class="labelText" for="sectionE_ProtectionDeclaration1"><input type="checkbox" value="ProtectionCheck1" id="sectionE_ProtectionDeclaration1" name="sectionE_ProtectionDeclaration"> Funding Application by relevant SG Enable / Government authorities / funding organisations.</label>
-            <label class="labelText" for="sectionE_ProtectionDeclaration2"><input type="checkbox" value="ProtectionCheck2" id="sectionE_ProtectionDeclaration2" name="sectionE_ProtectionDeclaration">Assessment by professionals of hospitals/service provider agencies/government authorities/vendors.</label>
-            <label class="labelText" for="sectionE_ProtectionDeclaration3"><input type="checkbox" value="ProtectionCheck3" id="sectionE_ProtectionDeclaration3" name="sectionE_ProtectionDeclaration">Use of photos/videos for public awareness for internal and external purposes.</label>
+            <label class="labelText" for="sectionE_ProtectionDeclaration1"><input type="checkbox" value="ProtectionCheck1" id="sectionE_ProtectionDeclaration1" name="sectionE_ProtectionDeclaration" required> Funding Application by relevant SG Enable / Government authorities / funding organisations.</label>
+            <label class="labelText" for="sectionE_ProtectionDeclaration2"><input type="checkbox" value="ProtectionCheck2" id="sectionE_ProtectionDeclaration2" name="sectionE_ProtectionDeclaration" required>Assessment by professionals of hospitals/service provider agencies/government authorities/vendors.</label>
+            <label class="labelText" for="sectionE_ProtectionDeclaration3"><input type="checkbox" value="ProtectionCheck3" id="sectionE_ProtectionDeclaration3" name="sectionE_ProtectionDeclaration" required>Use of photos/videos for public awareness for internal and external purposes.</label>
         </div>
 
         <h3>Declaration by applicant/caregiver</h3>
         <p>Consent/Declaration must be signed by Main Applicant and/or the Ordinary Member.</p>
         <div>
-            <label class="labelText" for="sectionE_ApplicantDeclaration1"><input type="checkbox" value="ProtectionCheck4" id="sectionE_ApplicantDeclaration1" name="sectionE_ApplicantDeclaration"> I/We hereby declare that all the information provided in this application form is true, correct and accurate to the best of my knowledge. </label>
-            <label class="labelText" for="sectionE_ApplicantDeclaration2"><input type="checkbox" value="ProtectionCheck5"id="sectionE_ApplicantDeclaration2" name="sectionE_ApplicantDeclaration">I/We also understand that all information provided for the purpose of subsidy application will be kept confidential.</label>
-            <label class="labelText" for="sectionE_ApplicantDeclaration3"><input type="checkbox" value="ProtectionCheck6"id="sectionE_ApplicantDeclaration3" name="sectionE_ApplicantDeclaration">I/We understand and acknowledge that if any of the information provided in this form is false or inaccurate, I will be liable to repay in full any subsidy and financial assistance granted inclusive of all administrative expenses, and/or denied future financial assistance for a stipulated period of time set by the Association.</label>
+            <label class="labelText" for="sectionE_ApplicantDeclaration1"><input type="checkbox" value="ProtectionCheck4" id="sectionE_ApplicantDeclaration1" name="sectionE_ApplicantDeclaration" required> I/We hereby declare that all the information provided in this application form is true, correct and accurate to the best of my knowledge. </label>
+            <label class="labelText" for="sectionE_ApplicantDeclaration2"><input type="checkbox" value="ProtectionCheck5"id="sectionE_ApplicantDeclaration2" name="sectionE_ApplicantDeclaration" required>I/We also understand that all information provided for the purpose of subsidy application will be kept confidential.</label>
+            <label class="labelText" for="sectionE_ApplicantDeclaration3"><input type="checkbox" value="ProtectionCheck6"id="sectionE_ApplicantDeclaration3" name="sectionE_ApplicantDeclaration" required>I/We understand and acknowledge that if any of the information provided in this form is false or inaccurate, I will be liable to repay in full any subsidy and financial assistance granted inclusive of all administrative expenses, and/or denied future financial assistance for a stipulated period of time set by the Association.</label>
         </div>
         <p>I/We hereby confirm that I/We understand and agree to all the provisions in this form.</p>
         <h3>MAIN APPLICANT</h3>
