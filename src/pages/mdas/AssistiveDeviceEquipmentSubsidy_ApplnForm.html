@@ -13,8 +13,12 @@
         <h2>Section A</h2>
         <p>Main applicant of subsidy schemes - person with muscular dystophy (PMD)</p>
         <div>
-            <div class="labelText">I have a valid MDAS Ordinary Membership <span class="spanCss">*</span></div>
-            <div class="radioGroup">
+           <label class="labelText" for="sectionA_Ordinary">I have a valid MDAS Ordinary Membership<span class="spanCss">*</span> <input type="checkbox" onchange="$('#GroupIDDiv').toggle();" id="sectionA_Ordinary" required> </label>
+            <div id="GroupIDDiv" style="display: none;">
+            <label class="labelText" for="GroupID">Membership GroupID<span class="error warning">*</span> </label>
+            <input type="text" id="GroupID" name="GroupID" onchange="LoadDataByordinaryNo($(this).val());return false;"  required>
+            </div>
+            <div class="radioGroup" style="display: none;">
                 <label><input type="radio" name="sectionA_ordinaryMembership" id="sectionA_ordinaryMembershipYes" value="1"> Yes</label>
                 <label><input type="radio" name="sectionA_ordinaryMembership" id="sectionA_ordinaryMembershipNo" value="0"> No</label>
                 <div><small><i>(If No, please complete Section B)</i></small></div>
@@ -49,15 +53,36 @@
         </div>
         <div>
             <label for="sectionA_Mobile">Mobile</label>
-            <input type="text" id="sectionA_Mobile" name="sectionA_Mobile" pattern="Mobile" />
+            <input type="text" id="sectionA_mobile" name="sectionA_mobile" pattern="Mobile" />
         </div>
         <div>
             <label for="sectionA_Home">Home</label>
-            <input type="text" id="sectionA_Home" name="sectionA_Home" pattern="Mobile" />
+            <input type="text" id="sectionA_home" name="sectionA_home" pattern="Mobile" />
         </div>
         <div>
             <label for="sectionA_Office">Office</label>
-            <input type="text" id="sectionA_Office" name="sectionA_Office" pattern="Mobile" />
+            <input type="text" id="sectionA_office" name="sectionA_office" pattern="Mobile" />
+        </div>
+          <h3>Mailing Address</h3>
+         <div>
+            <label for="sectionA_PostalCode">Postal Code</label>
+            <input type="text" id="sectionA_PostalCode" name="sectionA_PostalCode" />
+        </div>
+        <div>
+            <label for="sectionA_BlockNo">House/Block No</label>
+            <input type="text" id="sectionA_BlockNo" name="sectionA_BlockNo" />
+        </div>
+        <div>
+            <label for="sectionA_Level">Level/Unit(#00-0000)</label>
+            <input type="text" id="sectionA_Level" name="sectionA_Level" />
+        </div>
+        <div>
+            <label for="sectionA_BuildingName">Building Name</label>
+            <input type="text" id="sectionA_BuildingName" name="sectionA_BuildingName" />
+        </div>
+        <div>
+            <label for="sectionA_StreetName">Street Name</label>
+            <input type="text" id="sectionA_StreetName" name="sectionA_StreetName" />
         </div>
     </fieldset>
     <fieldset id="SectionB" style="display:none">

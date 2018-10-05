@@ -96,7 +96,7 @@ function GetAccessibleTransitMobilityAssistance(ID) {
                       var AccessibleTransit = data.d.RetData.Tbl.Rows[0];
                       CurrentID=AccessibleTransit.ID||0;
                       $('#sectionA_Ordinary').prop('checked',true);
-                      $('#GroupIDDiv').show();$('#GroupID').val(AccessibleTransit.GroupID||'G16026');
+                      $('#GroupIDDiv').show();$('#GroupID').val(AccessibleTransit.GroupID||'');
                      
                       $('#sectionA_FamilyName').val(AccessibleTransit.SectionAFamilyName || '')
                       $('#sectionA_GivenName').val(AccessibleTransit.SectionAGivenName|| '')
