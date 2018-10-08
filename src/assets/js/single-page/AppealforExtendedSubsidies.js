@@ -22,6 +22,12 @@ $(function() {
       GetAppealforExtendedSubsidies(ID)
     }
   });
+
+    $('#step1_PostalCode').blur(function () {
+      if ($(this).val() !== '') {
+          GetAddress();
+      }
+    });
 });
 
 
@@ -604,3 +610,31 @@ function formOthersInit() {
     }
   });
 }
+
+function GetAddress() {
+       var data = { 'Country': 'Singapore', 'PostalCode': $('#step1_PostalCode').val() };
+       $.ajax({
+           url: apiSrc + "BCMain/iCtc1.GetAddressByPostalCode.json",
+           method: "POST",
+           dataType: "json",
+           xhrFields: { withCredentials: true },
+           data: {
+               'data': JSON.stringify(data),
+               'WebPartKey': '021cb7cca70748ff89795e3ad544d5eb',
+               'ReqGUID': 'b4bbedbf-e591-4b7a-ad20-101f8f656277'
+           },
+           success: function (data) {
+               if ((data) && (data.d.RetVal === -1)) {
+                   if (data.d.RetData.Tbl.Rows.length > 0) {
+                       var ResultA = data.d.RetData.Tbl.Rows[0];
+                       $('#step1_BlockNo').val(ResultA.AddrP1);
+                       $('#step1_Level').val(ResultA.AddrP2);
+                       $('#step1_StreetName').val(ResultA.AddrP3);
+                       $('#step1_BuildingName').val(ResultA.AddrP4);
+
+                   }
+               }
+           }
+       });
+
+   }
