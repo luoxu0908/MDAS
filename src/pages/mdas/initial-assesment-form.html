@@ -13,11 +13,11 @@
         <div>
             <div class="labelText"></div>
             <div class="checkboxGroup">
-               <label>I have a valid MDAS Ordinary Membership&nbsp;&nbsp; <input type="checkbox" name="sectionA_ordinaryMembership" id="sectionA_ordinaryMembership" value="1"></label>
+               <label class="labelText" for="sectionA_ordinaryMembership">I have a valid MDAS Ordinary Membership&nbsp;&nbsp; <span class="error warning">*</span><input type="checkbox" name="sectionA_ordinaryMembership" id="sectionA_ordinaryMembership" value="1" required></label>
             </div>
             <div>
-                <label for="sectionA_FamilyName">Membership GroupID</label>
-                <input type="text" id="sectionA_GroupID" name="sectionA_GroupID"/>
+                <label class="labelText" for="sectionA_GroupID">Membership GroupID<span class="error warning">*</span></label>
+                <input type="text" id="sectionA_GroupID" name="sectionA_GroupID" required/>
             </div>
         </div>
         <h3>Name (as in NRIC)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="ProfileID"></span></h3>
@@ -34,7 +34,7 @@
             <input type="text" id="sectionA_DisplayName" name="sectionA_DisplayName" />
         </div>
         <div>
-            <label for="sectionA_nric">NRIC / Birth Cert No.</label>
+            <label class="labelText" for="sectionA_nric">NRIC / Birth Cert No. <span class="error warning">*</span></label>
             <input type="text" id="sectionA_nric" name="sectionA_nric" pattern="NRIC" required />
             <span class="form-error">Invalid NRIC</span>
         </div>
@@ -153,7 +153,7 @@
             <input type="text" id="sectionB_DisplayName" name="sectionB_DisplayName" />
         </div>
         <div>
-            <label for="sectionB_nric">NRIC / Birth Cert No.</label>
+            <label class="labelText" for="sectionB_nric">NRIC / Birth Cert No.<span class="error warning">*</span></label>
             <input type="text" id="sectionB_nric" name="sectionB_nric" pattern="NRIC" required />
             <span class="form-error">Invalid NRIC</span>
         </div>
@@ -200,7 +200,7 @@
             <input type="text" id="sectionC_DisplayNameMain" name="sectionC_DisplayNameMain" />
         </div>
         <div>
-            <label for="sectionC_nric">NRIC / Birth Cert No.</label>
+            <label class="labelText" for="sectionC_nric">NRIC / Birth Cert No.<span class="error warning">*</span></label>
             <input type="text" id="sectionC_nric" name="sectionC_nric" pattern="NRIC"  required/>
             <span class="form-error">Invalid NRIC</span>
         </div>

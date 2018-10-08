@@ -1115,7 +1115,7 @@ function GetMemberShip(GroupID){
             var R = data.d.RetData.Tbl.Rows, RowCnt = R.length;
             var html = '';
             for (var i = 0; i < RowCnt; i++) {
-                html += ' <label for="' + R[i].LookupKey + '" class="inlineblock"><input  type="checkbox"  name="Declaration" value="' + R[i].LookupKey + '" id="' + R[i].LookupKey + '" required/> &nbsp;' + R[i].Description + '</label>';
+                html += ' <label class="labelText" for="Declaration" class="inlineblock"><input required  type="checkbox"  name="Declaration" value="' + R[i].LookupKey + '" id="' + R[i].LookupKey + '" /> &nbsp;' + R[i].Description + '</label>';
             }
             $("#DeclarationList").html(html);
         });
