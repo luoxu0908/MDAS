@@ -14,19 +14,16 @@
   </head>
   <body id="page-{{page}}" class="">
     <div id="main">
-      {{> header}}
+      <!-- {{> header}} -->
       {{!-- Pages you create in the src/pages/ folder are inserted here when the flattened page is created. --}}
-      <div id="mainContent">
-        {{> title}}
-        {{> profile}}
-        {{> sidebar1 }}
+      <div id="mainContent" style="margin-top:-100px;">
         <div id="pageContent">{{> body}}</div>
 
-        {{> sidebar2 }}
+        <!-- {{> sidebar2 }} -->
         <iframe id="pageIFrame" ></iframe>
       </div>
        <!-- content end -->
-      {{> footer}}
+      <!-- {{> footer}} -->
     </div>
     {{> scripts}}
   </body>
