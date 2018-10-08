@@ -97,7 +97,7 @@ function GetAccessibleTransitMobilityAssistance(ID) {
                       CurrentID=AccessibleTransit.ID||0;
                       $('#sectionA_Ordinary').prop('checked',true);
                       $('#GroupIDDiv').show();$('#GroupID').val(AccessibleTransit.GroupID||'');
-                     
+
                       $('#sectionA_FamilyName').val(AccessibleTransit.SectionAFamilyName || '')
                       $('#sectionA_GivenName').val(AccessibleTransit.SectionAGivenName|| '')
                       $('#sectionA_DisplayName').val(AccessibleTransit.SectionADisplayName|| '')
@@ -107,14 +107,14 @@ function GetAccessibleTransitMobilityAssistance(ID) {
                       $('#sectionA_office').val(AccessibleTransit.SectionATelNoOffice|| '')
                       $('#sectionA_mobile').val(AccessibleTransit.SectionAHandphone|| '')
                       $('#sectionA_email').val(AccessibleTransit.SectionAEmail|| '')
-                     
+
 
                       $('#sectionA_PostalCode').val(AccessibleTransit.SectionAPostalCode|| '')
                       $('#sectionA_BlockNo').val(AccessibleTransit.SectionABlockNo|| '')
                       $('#sectionA_Level').val(AccessibleTransit.SectionALevelUnit|| '')
                       $('#sectionA_BuildingName').val(AccessibleTransit.SectionABuildingName|| '')
                       $('#sectionA_StreetName').val(AccessibleTransit.SectionAStreetName|| '')
-   
+
 
                       $('#sectionB_FamilyName').val(AccessibleTransit.SectionBFamilyName || '')
                       $('#sectionB_GivenName').val(AccessibleTransit.SectionBGivenName|| '')
@@ -145,7 +145,7 @@ function GetAccessibleTransitMobilityAssistance(ID) {
                       if (sectionC_PurposeTransport.lastIndexOf("for Medical Consultation")>-1) {
                          $('#SECTIONC2').show();
                       }
-                    
+
                       var sectionC_ModeTransport = AccessibleTransit.SectionCModeTransport || '';
                       if (sectionC_ModeTransport.length > 0) {
 
@@ -298,7 +298,7 @@ function LoadDataByordinaryNo(OrdinaryNo){
            for (e in row){
              $('#section'+e).val(row[e]);
            }
-        }       
+        }
       } else {
         alert(data.d.RetMsg);
       }
@@ -511,6 +511,7 @@ function SaveAccessibleTransitMobilityAssistance(){
         if (data.d.RetData.Tbl.Rows.length > 0) {
           if (data.d.RetData.Tbl.Rows[0].Success == true) {
             alert('Successfully updated!');
+            location.reload();
           } else { alert(data.d.RetData.Tbl.Rows[0].ReturnMsg); }
         }
       }

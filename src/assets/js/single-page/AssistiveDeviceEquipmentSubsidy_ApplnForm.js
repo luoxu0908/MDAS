@@ -299,8 +299,13 @@ function Save() {
         },
         success: function (data) {
             if ((data) && (data.d.RetVal === -1)) {
-                alert('Successfully updated!');
-                location.reload();
+              if (data.d.RetData.Tbl.Rows.length > 0) {
+                  if (data.d.RetData.Tbl.Rows[0].Success == true) {
+                    alert('Successfully updated!');
+                    location.reload();
+                  } else { alert(data.d.RetData.Tbl.Rows[0].ReturnMsg); }
+              }
+
             } else {
                 alert(data.d.RetMsg);
             }
