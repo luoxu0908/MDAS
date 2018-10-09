@@ -11,7 +11,7 @@ $(function(){
       SaveAccessibleTransitMobilityAssistance();
     });
     //get data
-    $.when(formSectionsInit(),formOthersInit(),GetRelationship('.sectionB_relationship')).then(function(){
+    $.when(formSectionsInit(),formOthersInit(),GetRelationship('.sectionB_relationship'),GetDropdownList('#sectionC_NameHospital', 'MembershipHospital')).then(function(){
       var ID= '';
       ID=GetQueryString('ID');
       if (ID.length>0) {
@@ -38,6 +38,38 @@ $(function(){
       }
       });
 });
+//geneare drop down optioms
+function GetDropdownList(id, category) {
+  var data = {
+    'LookupCat': category
+  };
+  $.ajax({
+    url: apiSrc + "BCMain/iCtc1.Lookup_Get.json",
+    method: "POST",
+    dataType: "json",
+    xhrFields: {
+      withCredentials: true
+    },
+    data: {
+      'data': JSON.stringify(data),
+      'WebPartKey': '021cb7cca70748ff89795e3ad544d5eb',
+      'ReqGUID': 'b4bbedbf-e591-4b7a-ad20-101f8f656277'
+    },
+    success: function(data) {
+      if ((data) && (data.d.RetVal === -1)) {
+        if (data.d.RetData.Tbl.Rows.length > 0) {
+          var lookup = data.d.RetData.Tbl.Rows;
+          for (var i = 0; i < lookup.length; i++) {
+            $(id).append('<option value="' + lookup[i].LookupKey + '">' + lookup[i].Description + '</option>');
+          }
+        }
+      } else {
+        alert(data.d.RetMsg);
+      }
+    }
+  });
+}
+
  function GetAddress() {
        var data = { 'Country': 'Singapore', 'PostalCode': $('#sectionA_PostalCode').val() };
        $.ajax({
