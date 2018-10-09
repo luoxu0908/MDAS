@@ -1,6 +1,6 @@
   Foundation.Abide.defaults.patterns['NRIC'] = /^[A-Z]{1}[0-9]{7}[A-Z]{1}$/;
   Foundation.Abide.defaults.patterns['Mobile'] = /^\+{0,1}\d{8,}$/;
-  $(document).foundation();
+
   var CurrentID=0;
     var SectionCObj = {};
   $(function () {
@@ -27,6 +27,7 @@
           SaveInitialAssesment();
       });
       $.when(formSectionsInit(), formOthersInit(), GetRelationship('.sectionB_relationship'), GetRelationship('.sectionC_relationship'),GetReviewedBy(),GetDeclaration()).then(function () {
+        $(document).foundation();
           var ID = '';
           ID = GetQueryString('ID');
           if (ID.length > 0) {
@@ -814,6 +815,9 @@ function GetMemberShip(GroupID){
   }
   // save initial-assesment-form
   function SaveInitialAssesment() {
+    if (!formSectionValidate($('#pageContentWrapper'),1)) {
+        return false;
+    }
       var data = {};
       data['ID'] = CurrentID;
       $('#pageContentWrapper :input,select').each(function () {
@@ -848,6 +852,7 @@ function GetMemberShip(GroupID){
                   if (data.d.RetData.Tbl.Rows.length > 0) {
                       if (data.d.RetData.Tbl.Rows[0].Success == true) {
                           alert('Successfully updated!');
+                          location.reload();
                       } else { alert(data.d.RetData.Tbl.Rows[0].ReturnMsg); }
                   }
               }
@@ -1115,7 +1120,7 @@ function GetMemberShip(GroupID){
             var R = data.d.RetData.Tbl.Rows, RowCnt = R.length;
             var html = '';
             for (var i = 0; i < RowCnt; i++) {
-                html += ' <label class="labelText" for="Declaration" class="inlineblock"><input required  type="checkbox"  name="Declaration" value="' + R[i].LookupKey + '" id="' + R[i].LookupKey + '" /> &nbsp;' + R[i].Description + '</label>';
+                html += ' <label class="labelText" for="' + R[i].LookupKey + '" class="inlineblock"><input   type="checkbox"  name="Declaration" value="' + R[i].LookupKey + '" id="' + R[i].LookupKey + '" required/> &nbsp;' + R[i].Description + '</label>';
             }
             $("#DeclarationList").html(html);
         });
